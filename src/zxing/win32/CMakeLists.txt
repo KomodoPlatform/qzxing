@@ -10,4 +10,4 @@ if(MSVC)
     LIST(APPEND SOURCES zxing/msvc/stdint.h)
 endif(MSVC)
 
-target_sources(qzxing PRIVATE ${SOURCES})
+target_sources(qzxing PUBLIC ${SOURCES})
