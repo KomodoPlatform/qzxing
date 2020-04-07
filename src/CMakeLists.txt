@@ -41,7 +41,7 @@ if(QZXING_USE_QML)
     add_definitions(-DQZXING_QML)
 endif(QZXING_USE_QML)
 
-add_library(qzxing "" ${SOURCES})
+add_library(qzxing STATIC ${SOURCES})
 
 if(WIN32)
     add_subdirectory(zxing/win32)
