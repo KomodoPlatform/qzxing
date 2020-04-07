@@ -341,7 +341,7 @@ SET(QRCODE_DIR
 
     )
 
-target_sources(qzxing PUBLIC
+target_sources(qzxing PRIVATE
     ${SOURCES}
     ${AZTEC_DIR}
     ${COMMON_DIR}

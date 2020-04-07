@@ -16,4 +16,4 @@ SET(SOURCES
      NumberlikeArray.hh
     )
 
-target_sources(qzxing PUBLIC ${SOURCES})
+target_sources(qzxing PRIVATE ${SOURCES})
