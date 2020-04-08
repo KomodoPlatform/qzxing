@@ -16,18 +16,27 @@
 #include <QtCore/QTextCodec>
 #include <QDebug>
 
+#ifdef ENABLE_ENCODER_QR_CODE
 #include <zxing/qrcode/encoder/Encoder.h>
 #include <zxing/qrcode/ErrorCorrectionLevel.h>
+#endif // ENABLE_ENCODER_QR_CODE
 
+#ifdef QZXING_MULTIMEDIA
 #include "QZXingFilter.h"
+#endif //QZXING_MULTIMEDIA
 
-
+#ifdef QZXING_QML
+#if QT_VERSION >= 0x040700 && QT_VERSION < 0x050000
+#include <QtDeclarative>
+#elif QT_VERSION >= 0x050000
 #include <QtQml/qqml.h>
+#endif
 
 #include <QQmlEngine>
 #include <QQmlContext>
 #include <QQuickImageProvider>
 #include "QZXingImageProvider.h"
+#endif //QZXING_QML
 
 
 using namespace zxing;
@@ -72,21 +81,28 @@ QZXing::QZXing(QZXing::DecoderFormat decodeHints, QObject *parent) : QObject(par
     setDecoder(decodeHints);
 }
 
+#ifdef QZXING_QML
 
+#if QT_VERSION >= 0x040700
 void QZXing::registerQMLTypes()
 {
     qmlRegisterType<QZXing>("QZXing", 2, 3, "QZXing");
 
-
+#ifdef QZXING_MULTIMEDIA
     qmlRegisterType<QZXingFilter>("QZXing", 2, 3, "QZXingFilter");
+#endif //QZXING_MULTIMEDIA
 
 }
+#endif //QT_VERSION >= Qt 4.7
 
+#if  QT_VERSION >= 0x050000
 void QZXing::registerQMLImageProvider(QQmlEngine& engine)
 {
     engine.addImageProvider(QLatin1String("QZXing"), new QZXingImageProvider());
 }
+#endif //QT_VERSION >= Qt 5.0
 
+#endif //QZXING_QML
 
 void QZXing::setTryHarder(bool tryHarder)
 {
@@ -515,6 +531,8 @@ QString QZXing::decodeSubImageQML(const QUrl &imageUrl,
                                   const int offsetX, const int offsetY,
                                   const int width, const int height)
 {
+#ifdef QZXING_QML
+
     QString imagePath = imageUrl.path();
     imagePath = imagePath.trimmed();
     QImage img;
@@ -538,8 +556,17 @@ QString QZXing::decodeSubImageQML(const QUrl &imageUrl,
     if (offsetX || offsetY || width || height)
         img = img.copy(offsetX, offsetY, width, height);
     return decodeImage(img);
+#else
+    Q_UNUSED(imageUrl);
+    Q_UNUSED(offsetX);
+    Q_UNUSED(offsetY);
+    Q_UNUSED(width);
+    Q_UNUSED(height);
+    return decodeImage(QImage());
+#endif //QZXING_QML
 }
 
+#ifdef ENABLE_ENCODER_GENERIC
 QImage QZXing::encodeData(const QString& data,
                           const EncoderFormat encoderFormat,
                           const QSize encoderImageSize,
@@ -561,6 +588,7 @@ QImage QZXing::encodeData(const QString &data, const QZXingEncoderConfig &encode
 
     try {
         switch (encoderConfig.format) {
+#ifdef ENABLE_ENCODER_QR_CODE
         case EncoderFormat_QR_CODE:
         {
             Ref<qrcode::QRCode> barcode = qrcode::Encoder::encode(
@@ -596,6 +624,7 @@ QImage QZXing::encodeData(const QString &data, const QZXingEncoderConfig &encode
             image = image.scaled(encoderConfig.imageSize);
             break;
         }
+#endif // ENABLE_ENCODER_QR_CODE
         case EncoderFormat_INVALID:
             break;
         }
@@ -605,6 +634,7 @@ QImage QZXing::encodeData(const QString &data, const QZXingEncoderConfig &encode
 
     return image;
 }
+#endif // ENABLE_ENCODER_GENERIC
 
 int QZXing::getProcessTimeOfLastDecoding()
 {
