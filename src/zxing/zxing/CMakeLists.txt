@@ -43,6 +43,7 @@ SET(SOURCES
      ResultPointCallback.h
      UnsupportedEncodingException.h
      WriterException.h
+     WriterException.cpp
      ZXing.h
 
     )
