@@ -38,6 +38,7 @@ endif(QZXING_MULTIMEDIA)
 
 if(QZXING_USE_QML)
     LIST(APPEND SOURCES QZXingImageProvider.cpp QZXingImageProvider.h)
+    message(STATUS "ADDING QZXING QML")
     add_definitions(-DQZXING_QML)
 endif(QZXING_USE_QML)
 

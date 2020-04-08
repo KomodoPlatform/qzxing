@@ -37,9 +37,7 @@ class ResultMetadata;
 }
 class ImageHandler;
 
-#ifdef ENABLE_ENCODER_GENERIC
 struct QZXingEncoderConfig;
-#endif // ENABLE_ENCODER_GENERIC
 
 /**
   * A class containing a very very small subset of the ZXing library.
@@ -107,17 +105,9 @@ public:
 
     QZXing(DecoderFormat decodeHints, QObject *parent = Q_NULLPTR);
 
-#ifdef QZXING_QML
 
-#if QT_VERSION >= 0x040700
     static void registerQMLTypes();
-#endif //QT_VERSION >= Qt 4.7
-
-#if  QT_VERSION >= 0x050000
     static void registerQMLImageProvider(QQmlEngine& engine);
-#endif //QT_VERSION >= Qt 5.0
-
-#endif //QZXING_QML
 
     void setTryHarder(bool tryHarder);
     bool getTryHarder();
@@ -180,7 +170,6 @@ public slots:
                               const int offsetX = 0, const int offsetY = 0,
                               const int width = 0, const int height = 0);
 
-#ifdef ENABLE_ENCODER_GENERIC
     /**
      * The main encoding function. Currently supports only Qr code encoding
      */
@@ -196,7 +185,6 @@ public slots:
                              const EncodeErrorCorrectionLevel errorCorrectionLevel = EncodeErrorCorrectionLevel_L,
                              const bool border = false,
                              const bool transparent = false);
-#endif // ENABLE_ENCODER_GENERIC
 
     /**
       * Get the prossecing time in millisecond of the last decode operation.
@@ -244,7 +232,6 @@ private:
     bool isThreaded;
 };
 
-#ifdef ENABLE_ENCODER_GENERIC
 typedef struct QZXingEncoderConfig
 {
     QZXing::EncoderFormat format;
@@ -261,7 +248,6 @@ typedef struct QZXingEncoderConfig
         format(encoderFormat_), imageSize(encoderImageSize_),
         errorCorrectionLevel(errorCorrectionLevel_), border(border_), transparent(transparent_) {}
 } QZXingEncoderConfig;
-#endif // ENABLE_ENCODER_GENERIC
 
 #endif // QZXING_H
 
